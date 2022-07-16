@@ -31,12 +31,8 @@ def user_answer_per_date(df):
     return answers_per_day
 
 
-ts_dfs = user_answer_per_date(df)
-answers_per_date = pd.concat(ts_dfs.values(), axis=1)
-answers_per_date.columns = ts_dfs.keys()  # A dataframe where columns are user_n.
-
-
 def create_date_widget(df):
+    """Creating a date widget to apply to the graph."""
     ts_dfs = user_answer_per_date(df)
     date_w = st.date_input(
         "Date range to plot",
@@ -77,24 +73,19 @@ def create_user_multiselect(df):
 
 def plot_questions_answered(df):
     """A function that plots the number of questions selected users answered each day"""
-    ts_dfs0 = user_answer_per_date(df)
-    answers_per_date = pd.concat(ts_dfs0.values(), axis=1)
-    answers_per_date.columns = ts_dfs0.keys()
+    individual_users_dict = user_answer_per_date(df) 
+    answers_per_date = pd.concat(individual_users_dict.values(), axis=1)
+    answers_per_date.columns = individual_users_dict.keys()
+    # creating indivudal df for each user ID
 
     start, end = create_date_widget(df)
     users_list = create_user_multiselect(df)
 
-    # checkbox_dict = create_user_checkbox(df)
-    # users_list = []
-    # for key, checkbox in checkbox_dict.items():
-    #     if checkbox:
-    #         users_list.append(key)
-
-    ts_dfs = {user: ts_dfs0[user] for user in users_list}
+    ts_dfs = {user: individual_users_dict[user] for user in users_list} # Time series data frames
     fig, ax = plt.subplots(sharex=True)
     for key, df in ts_dfs.items():
         if end != df.index[-1]:
-            df.loc[end] = 0
+            df.loc[end] = 0                     # Plotting the graph.
         ax = sns.lineplot(data=df.loc[start:end], legend="brief", label=key)
         ax.set(xlabel="Date", ylabel="Number of answers")
         ax.set_xticklabels(df.loc[start:end].index, rotation=45)
@@ -104,4 +95,4 @@ def plot_questions_answered(df):
     st.pyplot(fig)
 
 
-print(plot_questions_answered(df))
+plot_questions_answered(df)
