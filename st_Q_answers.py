@@ -1,3 +1,4 @@
+from unittest import skip
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -6,15 +7,20 @@ import numpy as np
 import matplotlib.dates as mdates
 
 
-from datetime import datetime
-
-
 file_col1, file_col2 = st.columns(2)
-uploaded_first_owestry = file_col1.file_uploader("Choose a first OWESTRY CSV file")
+
+uploaded_first_baseline = file_col1.file_uploader("Choose a baseline data CSV file")
 
 uploaded_file = file_col2.file_uploader("Choose a Solio DB CSV file")
 
-owestry_df = pd.read_csv(uploaded_first_owestry, index_col=['User'])
+def handling_no_baseline(uploaded_baseline):
+
+    if uploaded_first_baseline != None:
+        baseline_df = pd.read_csv(uploaded_first_baseline, index_col=['User'])
+    else:
+        baseline_df = None
+    return baseline_df
+    
 
 df = pd.read_csv(
     uploaded_file,
@@ -47,17 +53,15 @@ def create_indiviudal_user_dfs(df):
     return users_dfs
 
 
-def user_string_input():
-
-    user_number = st.text_input("User number", "user_1")
-    st.write("The current user title is", user_number)
+def user_string_input(df):
+    st.write(f'Data available for users {sorted(list(df.index.get_level_values(0).drop_duplicates()))}')
+    user_number = st.text_input("Show data for user:", "user_1")
     return user_number
 
 
-def bar_graph_data(df, user_n="user_1"):
+def bar_graph_data(df, user_n="user_1", base_line=None):
     """A function that draws a bar plot where the x axis is the week number and the y axis is the question's answer.
     Streamlit functionality is to only choose the questions you want to see answers for right now."""
-
 
     col1, col2 = st.columns(2)
 
@@ -65,15 +69,20 @@ def bar_graph_data(df, user_n="user_1"):
     try:
         user = users_dfs[user_n]
         user.set_index(user.index.get_level_values(1), inplace=True)
-        col1.write(r'Baseline OWESTRY answers:')
-        col1.write(owestry_df.loc[int(user_n[-1])])
+        if base_line.iloc[0, 0] != None:
+            col1.subheader(r'Baseline answers:')
+            col1.write(base_line.loc[int(user_n[-1])])
     except KeyError:
         if  "user_" in user_n:
             st.subheader(f'ERROR: {user_n} is not found in the selected data-base CSV file')
         else:
             st.subheader(f'ERROR: {user_n} is an invalid user index')
         return
+    except AttributeError:
+        col1.subheader('Missing Baseline CSV file')
+        pass
 
+  
     grouped_week = user.groupby("Week").sum()
     grouped_week.drop("Pain VAS", axis=1, inplace=True)
 
@@ -129,6 +138,7 @@ def pain_vas_graph(df, user_n="user_1"):
     st.pyplot(fig)
 
 
-user_ = user_string_input()
-bar_graph_data(df, user_)
+baseline_df = handling_no_baseline(uploaded_first_baseline)
+user_ = user_string_input(df)
+bar_graph_data(df, user_, base_line=baseline_df)
 pain_vas_graph(df, user_)
