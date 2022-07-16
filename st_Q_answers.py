@@ -36,8 +36,7 @@ df.tail()
 df["Week"] = np.nan
 for n in range(0, len(df)):
     date_bool = (
-        df.index.get_level_values(1)[n] - df.index.get_level_values(1)[n - 1]
-    ) == 3
+        df.index.get_level_values(1)[n] - df.index.get_level_values(1)[n - 1]) == 3
     week_count = 1
     day_count = 1
     match date_bool:
