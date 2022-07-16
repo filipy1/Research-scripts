@@ -73,7 +73,7 @@ def create_user_multiselect(df):
 
 def plot_questions_answered(df):
     """A function that plots the number of questions selected users answered each day"""
-    individual_users_dict = user_answer_per_date(df) 
+    individual_users_dict = user_answer_per_date(df)
     answers_per_date = pd.concat(individual_users_dict.values(), axis=1)
     answers_per_date.columns = individual_users_dict.keys()
     # creating indivudal df for each user ID
@@ -81,18 +81,20 @@ def plot_questions_answered(df):
     start, end = create_date_widget(df)
     users_list = create_user_multiselect(df)
 
-    ts_dfs = {user: individual_users_dict[user] for user in users_list} # Time series data frames
+    ts_dfs = {
+        user: individual_users_dict[user] for user in users_list
+    }  # Time series data frames
     fig, ax = plt.subplots(sharex=True)
     for key, df in ts_dfs.items():
         if end != df.index[-1]:
-            df.loc[end] = 0                     # Plotting the graph.
+            df.loc[end] = 0  # Plotting the graph.
         ax = sns.lineplot(data=df.loc[start:end], legend="brief", label=key)
         ax.set(xlabel="Date", ylabel="Number of answers")
         ax.set_xticklabels(df.loc[start:end].index, rotation=45)
         plt.xticks(df.loc[start:end].index)
     myFmt = mdates.DateFormatter("%d-%m-%y")
     ax.xaxis.set_major_formatter(myFmt)
-    st.pyplot(fig)  
-  
+    st.pyplot(fig)
+
 
 plot_questions_answered(df)
