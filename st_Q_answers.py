@@ -64,7 +64,7 @@ def user_string_input(df):
     st.write(
         f"Data available for users {sorted(list(df.index.get_level_values(0).drop_duplicates()))}"
     )
-    user_number = st.text_input("Show data for user:", "user_1")
+    user_number = st.text_input("Show data for user:", "1")
     return user_number
 
 
