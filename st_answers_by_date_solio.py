@@ -92,7 +92,7 @@ def plot_questions_answered(df):
         plt.xticks(df.loc[start:end].index)
     myFmt = mdates.DateFormatter("%d-%m-%y")
     ax.xaxis.set_major_formatter(myFmt)
-    st.pyplot(fig)
-
+    st.pyplot(fig)  
+  
 
 plot_questions_answered(df)

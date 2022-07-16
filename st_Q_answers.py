@@ -150,3 +150,4 @@ baseline_df = handling_no_baseline(uploaded_first_baseline)
 user_ = user_string_input(df)
 bar_graph_data(df, user_, base_line=baseline_df)
 pain_vas_graph(df, user_)
+  
