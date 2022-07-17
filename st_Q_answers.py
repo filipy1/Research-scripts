@@ -79,14 +79,14 @@ def bar_graph_data(df, user_n="1", base_line=None):
         user.set_index(user.index.get_level_values(1), inplace=True)
         if base_line.iloc[0, 0] != None:
             col1.subheader(r"Baseline answers:")
-            col1.write(base_line.loc[int(user_n[-1])])
+            col1.write(base_line.loc[int(user_n)])
     except KeyError:  # Handling a key error that arises when the user inputs an invalid user ID
-        if "user_" in user_n:
+        if "" in user_n:
             st.subheader(
                 f"ERROR: {user_n} is not found in the selected data-base CSV file"
             )
         else:
-            st.subheader(f"ERROR: {user_n} is an invalid user index")
+            st.subheader(f"ERROR:{type(user_n)} is an invalid user index")
         return
     except AttributeError:  # Handling an attribute error when there's no baseline csv file
         col1.subheader("Missing Baseline CSV file")
