@@ -1,16 +1,10 @@
 from datetime import timedelta
-from itertools import dropwhile
-from re import L
-from unittest import skip
-from venv import create
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 import matplotlib.dates as mdates
-import plotly.express as px
-
 
 file_col1, file_col2 = st.columns(2)  # setting up columns to put file widgets on.
 
