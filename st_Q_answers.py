@@ -16,7 +16,7 @@ file_col1, file_col2 = st.columns(2)  # setting up columns to put file widgets o
 
 uploaded_first_baseline = file_col1.file_uploader("Choose a baseline data CSV file")
 
-uploaded_file = file_col2.file_uploader("Choose a Solio DB CSV file")
+uploaded_file = file_col2.file_uploader("Choose a DB CSV file")
 
 
 def handling_no_baseline(uploaded_baseline):
