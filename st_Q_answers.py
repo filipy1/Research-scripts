@@ -9,8 +9,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 import matplotlib.dates as mdates
-import altair as alt
-from vega_datasets import data
+import plotly.express as px
+
 
 file_col1, file_col2 = st.columns(2)  # setting up columns to put file widgets on.
 
@@ -141,49 +141,21 @@ def bar_graph_data(df, user_n="1", base_line=None):
     st.pyplot(fig)
 
 
-# def pain_vas_graph(df, user_n="1"):
-#     """A function to draw the pain VAS answers we collect each day (in contrast to the OWESTRY questions we collect once a week"""
-#     users_dfs = create_indiviudal_user_dfs(df)
-#     user = users_dfs[user_n]
-#     user.set_index(user.index.get_level_values(1), inplace=True)
-#     fig, ax = plt.subplots(figsize=(15, 6))
-#     ax = sns.lineplot(x=user.index, y=user["Pain VAS"])
-#     ax.set_xticklabels(user.index, rotation=45)
-#     myFmt = mdates.DateFormatter("%d-%m-%y")
-#     ax.xaxis.set_major_formatter(myFmt)
-#     ax.set_title(f"Pain VAS by date, {user_n}")
-#     st.pyplot(fig)
-
-
-def pain_vas_graph(df, vas_column=None):
-    
-    users_dfs = create_indiviudal_user_dfs(df) # dictionary
-    users_vas = {}
-    for user in users_dfs.keys():
-        user_ts = users_dfs[user]
-        user_ts = user_ts[vas_column]
-        users_vas[user] = user_ts
-        
-
-    vas_df = pd.DataFrame(users_vas)
-    vas_df = vas_df.groupby(vas_df.index.get_level_values(1)).sum()
-    vas_df.set_index(vas_df.index.date)
-    
-
-    fig, ax = plt.subplots(figsize=(15, 6), sharex=True)
-    for key, df in users_vas.items():
-        ax = sns.lineplot(x=df.index.get_level_values(1), y=df.values, label=f"user {key}")
-        ax.set(xlabel="Date", ylabel=f'{vas_column} answer')    
-        #ax.set_xticklabels(df.index.get_level_values(1), rotation=45)
-        #plt.xticks(df.index.get_level_values(1))
-
+def pain_vas_graph(df, user_n="1"):
+    """A function to draw the pain VAS answers we collect each day (in contrast to the OWESTRY questions we collect once a week"""
+    users_dfs = create_indiviudal_user_dfs(df)
+    user = users_dfs[user_n]
+    user.set_index(user.index.get_level_values(1), inplace=True)
+    fig, ax = plt.subplots(figsize=(15, 6))
+    ax = sns.lineplot(x=user.index, y=user["Pain VAS"])
+    ax.set_xticklabels(user.index, rotation=45)
     myFmt = mdates.DateFormatter("%d-%m-%y")
     ax.xaxis.set_major_formatter(myFmt)
+    ax.set_title(f"Pain VAS by date, {user_n}")
     st.pyplot(fig)
     
 
 baseline_df = handling_no_baseline(uploaded_first_baseline)
 user_ = user_string_input(df)
 bar_graph_data(df, user_, base_line=baseline_df)
-pain_vas_graph(df, 'Pain VAS')
-#pain_vas_graph(df, user_ )
+pain_vas_graph(df, user_ )
