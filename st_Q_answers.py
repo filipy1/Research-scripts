@@ -43,13 +43,15 @@ week_count = 1
 day_count = 1
 for n in range(0, len(df)):
     date_bool = (
-        df.index.get_level_values(1)[n] - df.index.get_level_values(1)[n - 1]) >= timedelta(3)
+        df.index.get_level_values(1)[n] - df.index.get_level_values(1)[n - 1]
+    ) >= timedelta(3)
     match date_bool:
         case True:  ## This Section handles creating a "week in trial" column by using the dates given a part of the index
             week_count += 1  ## Sunday is the first day of the week!!!!
             df.iloc[n, -1] = week_count
         case False:
             df.iloc[n, -1] = week_count
+
 
 def create_indiviudal_user_dfs(df):
     """Create a dictionary where keys are user_n and values and individual answer df for that user."""
@@ -95,7 +97,7 @@ def bar_graph_data(df, user_n="1", base_line=None):
         col1.subheader("Missing Baseline CSV file")
         pass
 
-    #st.write(user)
+    # st.write(user)
     grouped_week = user.groupby(
         "Week", dropna=False
     ).sum()  # Preping dataframe for weekly answers visualization
@@ -153,9 +155,9 @@ def pain_vas_graph(df, user_n="1"):
     ax.xaxis.set_major_formatter(myFmt)
     ax.set_title(f"Pain VAS by date, {user_n}")
     st.pyplot(fig)
-    
+
 
 baseline_df = handling_no_baseline(uploaded_first_baseline)
 user_ = user_string_input(df)
 bar_graph_data(df, user_, base_line=baseline_df)
-pain_vas_graph(df, user_ )
+pain_vas_graph(df, user_)
