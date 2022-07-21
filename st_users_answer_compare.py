@@ -26,14 +26,16 @@ def create_indiviudal_user_dfs(df):
 
 def question_comprasion(df):
     """A function to help compare and plot the answers of all participants answers for a specific question."""
-    radio = st.radio(
+    column = st.radio(
         "Which question would you like to compare between USERS?", df.columns
     )
 
+    df_column = df[column].reset_index()
+    df_column.dropna(axis=0, inplace=True)
     fig = px.line(
-        df.reset_index(),
-        x="Date",
-        y=radio,
+        df_column,
+        x='Date',
+        y=column,
         color="User ID",
         line_dash="User ID",
         markers=True,
