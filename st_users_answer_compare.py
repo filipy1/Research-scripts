@@ -43,13 +43,13 @@ def question_comprasion(df, device_type_df=None):
         "Which question would you like to compare between USERS?", df.columns
     )
     try:
-        placebo_options = ['all'] + list((device_type_df.iloc[:, 1].drop_duplicates())) 
-        placebo_radio = col2.radio('Choose which device type group to draw a graph for', placebo_options)
+        group_options = ['All'] + list((device_type_df.iloc[:, 1].drop_duplicates())) 
+        group_radio = col2.radio('Choose which device type group to draw a graph for', ['All', 'By group'])
     except:
-        placebo_radio = None
+        group_radio = 'All'
         col2.subheader('No group CSV provided')
         
-    if placebo_radio in ['all', None]:
+    if group_radio == 'All':
         df_column = df[radio_option].reset_index()
         df_column.dropna(axis=0, inplace=True)
         fig = px.line(
@@ -65,21 +65,23 @@ def question_comprasion(df, device_type_df=None):
         return
     
     else:
-        users_to_show = device_type_df[device_type_df.iloc[:, 1] == placebo_radio]
-        usr_lst = users_to_show.iloc[:, 0].tolist()
-        sliced_df = df.loc[usr_lst]
-        df_column = sliced_df[radio_option].reset_index()
-        df_column.dropna(axis=0, inplace=True)
-        fig = px.line(
-            df_column,
-            x='Date',
-            y=radio_option,
-            color="User ID",
-            line_dash="User ID",
-            markers=True,
-            title=f'Showing {placebo_radio} devices'
+        cont = st.container()
+        for i, group in enumerate(group_options[1:]):
+            users_to_show = device_type_df[device_type_df.iloc[:, 1] == group]
+            usr_lst = users_to_show.iloc[:, 0].tolist()
+            sliced_df = df.loc[usr_lst]
+            df_column = sliced_df[radio_option].reset_index()
+            df_column.dropna(axis=0, inplace=True)
+            fig = px.line(
+                df_column,
+                x='Date',
+                y=radio_option,
+                color="User ID",
+                line_dash="User ID",
+                markers=True,
+                title=f'Showing {group} devices'
         ) 
-        st.plotly_chart(fig, use_container_width=True)
+            cont.plotly_chart(fig, use_container_width=True)
         return
 
 question_comprasion(df, group_df)
