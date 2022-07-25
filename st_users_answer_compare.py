@@ -59,6 +59,7 @@ def question_comprasion(df, device_type_df=None):
             color="User ID",
             line_dash="User ID",
             markers=True,
+            title="All participants"
         )
         st.plotly_chart(fig, use_container_width=True)
         return
@@ -76,6 +77,7 @@ def question_comprasion(df, device_type_df=None):
             color="User ID",
             line_dash="User ID",
             markers=True,
+            title=f'Showing {placebo_radio} devices'
         ) 
         st.plotly_chart(fig, use_container_width=True)
         return
