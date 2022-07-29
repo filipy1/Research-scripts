@@ -6,6 +6,8 @@ import seaborn as sns
 import numpy as np
 import matplotlib.dates as mdates
 
+### A script to compare a participant's answers for each week over the course of the trial.
+
 file_col1, file_col2 = st.columns(2)  # setting up columns to put file widgets on.
 
 uploaded_first_baseline = file_col1.file_uploader("Choose a baseline data CSV file")
