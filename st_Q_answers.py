@@ -1,20 +1,9 @@
-from datetime import timedelta
-from turtle import width
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-import numpy as np
 import matplotlib.dates as mdates
-from datetime import timedelta
-import streamlit as st
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
 import numpy as np
-import matplotlib.dates as mdates
-import plotly.express as px
-from plotly.subplots import make_subplots
 import plotly.graph_objects as go
 
 ### A script to compare a participant's answers for each week over the course of the trial.
