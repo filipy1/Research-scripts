@@ -48,12 +48,15 @@ df.tail()
 #         case False:
 #             df.iloc[n, -1] = week_count
 
-df['Date'] = pd.to_datetime(df['Date'], format='%d/%m/%Y')
-df['Week'] = df['Date'].dt.isocalendar().week
-df['Day_of_week'] = df['Date'].dt.day_name()
-df.loc[df['Day_of_week'] == 'Sunday', 'Week'] = df.loc[df['Day_of_week'] == 'Sunday', 'Week'] + 1
-first_week = min(df['Week'].drop_duplicates())
-df['Week'] = df['Week'] - first_week + 1
+df["Date"] = pd.to_datetime(df["Date"], format="%d/%m/%Y")
+df["Week"] = df["Date"].dt.isocalendar().week
+df["Day_of_week"] = df["Date"].dt.day_name()
+df.loc[df["Day_of_week"] == "Sunday", "Week"] = (
+    df.loc[df["Day_of_week"] == "Sunday", "Week"] + 1
+)
+first_week = min(df["Week"].drop_duplicates())
+df["Week"] = df["Week"] - first_week + 1
+
 
 def create_indiviudal_user_dfs(df):
     """Create a dictionary where keys are user_n and values and individual answer df for that user."""
@@ -65,9 +68,7 @@ def create_indiviudal_user_dfs(df):
 
 def user_string_input(df):
     """Creating a text_input for users"""
-    st.write(
-        f"Data available for users {sorted(list(df.index.drop_duplicates()))}"
-    )
+    st.write(f"Data available for users {sorted(list(df.index.drop_duplicates()))}")
     user_number = st.text_input("Show data for user:", "1")
     return user_number
 
@@ -77,13 +78,13 @@ def bar_graph_data(df, user_n="1", base_line=None):
     Streamlit functionality is to only choose the questions you want to see answers for right now."""
 
     col1, col2 = st.columns(2)  # 2 columns for smoother look
-    df = df.drop('Pain VAS', axis=1)
+    df = df.drop("Pain VAS", axis=1)
     users_dfs = create_indiviudal_user_dfs(
         df
     )  # Dictionary of DF's for every user in the CSV
     try:
         user = users_dfs[user_n]
-        user.set_index(user['Date'], drop=True, inplace=True)
+        user.set_index(user["Date"], drop=True, inplace=True)
         if base_line.iloc[0, 0] != None:
             col1.subheader(r"Baseline answers:")
             col1.write(base_line.loc[int(user_n)])
@@ -115,13 +116,14 @@ def bar_graph_data(df, user_n="1", base_line=None):
             if checkbox:
                 questions_lst.append(question)
 
-
     ### Plotting everything on graphs
-    fig = go.Figure([go.Bar(x=user['Week'], y=user[col], name=col, text=user['Date'].dt.date) for col in questions_lst])
-    fig.update_layout(
-    autosize=False,
-    width=1000,
-    height=400)
+    fig = go.Figure(
+        [
+            go.Bar(x=user["Week"], y=user[col], name=col, text=user["Date"].dt.date)
+            for col in questions_lst
+        ]
+    )
+    fig.update_layout(autosize=False, width=900, height=400)
 
     st.plotly_chart(fig)
 
@@ -130,7 +132,7 @@ def pain_vas_graph(df, user_n="1"):
     """A function to draw the pain VAS answers we collect each day (in contrast to the OWESTRY questions we collect once a week"""
     users_dfs = create_indiviudal_user_dfs(df)
     user = users_dfs[user_n]
-    user.set_index(user['Date'], drop=True, inplace=True)
+    user.set_index(user["Date"], drop=True, inplace=True)
     fig, ax = plt.subplots(figsize=(15, 6))
     ax = sns.lineplot(x=user.index, y=user["Pain VAS"])
     ax.set_xticklabels(user.index, rotation=45)

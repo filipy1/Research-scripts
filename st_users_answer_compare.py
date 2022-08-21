@@ -17,14 +17,14 @@ df = pd.read_csv(
     dayfirst=True,
 )
 
-### Optional to add another CSV file representing the different groups in the information 
+### Optional to add another CSV file representing the different groups in the information
 try:
     group_upload = col2.file_uploader(
-            'Upload a CSV built from with 2 columns: "User ID" and "Group type" (e.g. sham/real)',
-        )
+        'Upload a CSV built from with 2 columns: "User ID" and "Group type" (e.g. sham/real)',
+    )
     group_df = pd.read_csv(group_upload)
 except:
-    col2.write('No User group CSV was provided')
+    col2.write("No User group CSV was provided")
     group_df = None
 
 
@@ -44,27 +44,29 @@ def question_comprasion(df, device_type_df=None):
         "Which question would you like to compare between USERS?", df.columns
     )
     try:
-        group_options = ['All'] + list((device_type_df.iloc[:, 1].drop_duplicates())) 
-        group_radio = col2.radio('Choose which device type group to draw a graph for', ['All', 'By group'])
+        group_options = ["All"] + list((device_type_df.iloc[:, 1].drop_duplicates()))
+        group_radio = col2.radio(
+            "Choose which device type group to draw a graph for", ["All", "By group"]
+        )
     except:
-        group_radio = 'All'
-        col2.subheader('No group CSV provided')
-        
-    if group_radio == 'All':
+        group_radio = "All"
+        col2.subheader("No group CSV provided")
+
+    if group_radio == "All":
         df_column = df[radio_option].reset_index()
         df_column.dropna(axis=0, inplace=True)
         fig = px.line(
             df_column,
-            x='Date',
+            x="Date",
             y=radio_option,
             color="User ID",
             line_dash="User ID",
             markers=True,
-            title="All participants"
+            title="All participants",
         )
         st.plotly_chart(fig, use_container_width=True)
         return
-    
+
     else:
         cont = st.container()
         for i, group in enumerate(group_options[1:]):
@@ -75,14 +77,15 @@ def question_comprasion(df, device_type_df=None):
             df_column.dropna(axis=0, inplace=True)
             fig = px.line(
                 df_column,
-                x='Date',
+                x="Date",
                 y=radio_option,
                 color="User ID",
                 line_dash="User ID",
                 markers=True,
-                title=f'Showing {group} devices'
-        ) 
+                title=f"Showing {group} devices",
+            )
             cont.plotly_chart(fig, use_container_width=True)
         return
+
 
 question_comprasion(df, group_df)
