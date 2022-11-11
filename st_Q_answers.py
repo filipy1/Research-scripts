@@ -14,24 +14,32 @@ uploaded_first_baseline = file_col1.file_uploader("Choose a baseline data CSV fi
 
 uploaded_file = file_col2.file_uploader("Choose a DB CSV file")
 
-
 def handling_no_baseline(uploaded_baseline):
     """Handling the uploaded baseline widget if no file is uploaded"""
     if (
         uploaded_baseline != None
     ):  # no file uploaded means the baseline file var will be NONE
-        baseline_df = pd.read_csv(uploaded_baseline, index_col=["User"])
+        if '.csv' in uploaded_baseline.name:
+            baseline_df = pd.read_csv(uploaded_baseline, index_col=['User'])
+        elif '.xlsx' in uploaded_baseline.name:
+            baseline_df = pd.read_excel(uploaded_baseline, index_col=[0])
     else:
         baseline_df = None
     return baseline_df
 
-
-df = pd.read_csv(
-    uploaded_file,
-    index_col=[0],
-    parse_dates=True,
-    dayfirst=True,
-)
+if '.xlsx' in uploaded_file.name:
+    df = pd.read_excel(
+        uploaded_file,
+        index_col= [0],
+        parse_dates=True,
+    )
+elif '.csv' in uploaded_file.name:
+    df = pd.read_csv(
+        uploaded_file,
+        index_col=[0],
+        parse_dates=True,
+        dayfirst=True,
+    )
 df.tail()
 
 # df["Week"] = np.nan

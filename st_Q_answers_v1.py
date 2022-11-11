@@ -14,24 +14,33 @@ uploaded_first_baseline = file_col1.file_uploader("Choose a baseline data CSV fi
 
 uploaded_file = file_col2.file_uploader("Choose a DB CSV file")
 
-
+st.write(uploaded_first_baseline.name)
 def handling_no_baseline(uploaded_baseline):
     """Handling the uploaded baseline widget if no file is uploaded"""
-    if (
-        uploaded_baseline != None
-    ):  # no file uploaded means the baseline file var will be NONE
-        baseline_df = pd.read_csv(uploaded_baseline, index_col=["User"])
+    if uploaded_baseline != None:  # no file uploaded means the baseline file var will be NONE
+        if 'csv' in uploaded_baseline.name:
+            baseline_df = pd.read_csv(uploaded_baseline, index_col=["User"])
+        elif 'xlsx' in uploaded_baseline.name:
+            baseline_df = pd.read_excel(uploaded_baseline, index_col=["User"])
     else:
         baseline_df = None
-    return baseline_df
+        return baseline_df
 
+if '.xlsx' in uploaded_file.name:
+    df = pd.read_excel(
+        uploaded_file,
+        index_col= [0,1],
+        parse_dates=True,
+    )
 
-df = pd.read_csv(
-    uploaded_file,
-    index_col=[0, 1],
-    parse_dates=True,
-    dayfirst=True,
-)
+elif '.csv' in uploaded_file.name:
+    df = pd.read_csv(
+        uploaded_file,
+        index_col=[0, 1],
+        parse_dates=True,
+        dayfirst=True,
+    )
+
 df.tail()
 
 df["Week"] = np.nan
@@ -153,7 +162,7 @@ def pain_vas_graph(df, user_n="1"):
     st.pyplot(fig)
 
 
-baseline_df = handling_no_baseline(uploaded_first_baseline)
+baseline = handling_no_baseline(uploaded_first_baseline)
 user_ = user_string_input(df)
-bar_graph_data(df, user_, base_line=baseline_df)
+bar_graph_data(df, user_, baseline)
 pain_vas_graph(df, user_)

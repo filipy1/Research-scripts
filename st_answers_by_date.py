@@ -10,7 +10,19 @@ import matplotlib.dates as mdates
 
 uploaded_file = st.file_uploader("Choose a Solio DB CSV file")
 
-df = pd.read_csv(uploaded_file, index_col=[0, 1], parse_dates=True, dayfirst=True)
+if '.xlsx' in uploaded_file.name:
+    df = pd.read_excel(
+        uploaded_file,
+        index_col= [0,1],
+        parse_dates=True,
+    )
+elif '.csv' in uploaded_file.name:
+    df = pd.read_csv(
+        uploaded_file,
+        index_col=[0, 1],
+        parse_dates=True,
+        dayfirst=True,
+    )
 
 
 def create_indiviudal_user_dfs(df):
