@@ -18,3 +18,5 @@ For this project I utilized the power of the multipage streamlit feature.
 The project is built such that there are 2 copies of each "streamlit app", one is for testing and building new features and the other is inside the "pages" under a different name which is the side bar title to be shown in the app.
 
 Another thing to note is the "Welcome.py" file which is the landing page of the app.
+
+### Also added dockerfile support
