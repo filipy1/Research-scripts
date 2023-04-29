@@ -19,3 +19,8 @@ The project is built such that there are 2 copies of each "streamlit app". One s
 Another thing to note is the "Welcome.py" file which is the landing page of the app.
 
 ### Also added dockerfile support
+
+### Usage example -
+https://user-images.githubusercontent.com/91021054/235316205-5ab06998-39f6-4723-a89d-ca474235d431.mov
+
+
