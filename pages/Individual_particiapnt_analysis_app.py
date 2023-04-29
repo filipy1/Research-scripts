@@ -17,7 +17,7 @@ st.set_page_config(
 st.write("# Indiviudal participant analysis app")
 
 st.markdown(
-    """An app to help zoom-in into the data of an indiviudal participant in the research.
+    """An app to help zoom-in into the data of an indiviudal participant in a research where 
     \n You'll need the basic DB file and the baseline* file for this script.
     \n \n
     * Baseline file format:
@@ -66,20 +66,6 @@ elif '.csv' in uploaded_file.name:
     )
 df.tail()
 
-# df["Week"] = np.nan
-# week_count = 1
-# day_count = 1
-# for n in range(0, len(df)):
-#     date_bool = (
-#         df.index.get_level_values(1)[n] - df.index.get_level_values(1)[n - 1]
-#     ) >= timedelta(3)
-#     match date_bool:
-#         case True:  ## This Section handles creating a "week in trial" column by using the dates given a part of the index
-#             week_count += 1  ## Sunday is the first day of the week!!!!
-#             df.iloc[n, -1] = week_count
-#         case False:
-#             df.iloc[n, -1] = week_count
-
 df["Date"] = pd.to_datetime(df["Date"], format="%d/%m/%Y")
 df["Week"] = df["Date"].dt.isocalendar().week
 df["Day_of_week"] = df["Date"].dt.day_name()
@@ -110,7 +96,7 @@ def bar_graph_data(df, user_n="1", base_line=None):
     Streamlit functionality is to only choose the questions you want to see answers for right now."""
 
     col1, col2 = st.columns(2)  # 2 columns for smoother look
-    df = df.drop("Pain VAS", axis=1)
+    #df = df.drop("Pain VAS", axis=1)
     users_dfs = create_indiviudal_user_dfs(
         df
     )  # Dictionary of DF's for every user in the CSV
@@ -129,7 +115,7 @@ def bar_graph_data(df, user_n="1", base_line=None):
             st.subheader(f"ERROR:{type(user_n)} is an invalid user index")
         return
     except AttributeError:  # Handling an attribute error when there's no baseline csv file
-        col1.subheader("Missing Baseline CSV file")
+        col1.subheader("Missing Baseline CSV/XLSX file")
         pass
 
     col2.write("Choose questions to view the answers for:")
@@ -161,12 +147,15 @@ def bar_graph_data(df, user_n="1", base_line=None):
 
 
 def pain_vas_graph(df, user_n="1"):
-    """A function to draw the pain VAS answers we collect each day (in contrast to the OWESTRY questions we collect once a week"""
+    """A function to draw the answers we collect each day (in contrast to the other questions we collect once a week)"""
+    df.drop(["Week", "Day_of_week"], axis=1, inplace=True)
+    category = st.radio("Choose question", df.columns)
     users_dfs = create_indiviudal_user_dfs(df)
     user = users_dfs[user_n]
     user.set_index(user["Date"], drop=True, inplace=True)
+    #user.drop(["Week", "Day_of_week"], axis=1, inplace=True)
     fig, ax = plt.subplots(figsize=(15, 6))
-    ax = sns.lineplot(x=user.index, y=user["Pain VAS"])
+    ax = sns.lineplot(x=user.index, y=user[category])
     ax.set_xticklabels(user.index, rotation=45)
     myFmt = mdates.DateFormatter("%d-%m-%y")
     ax.xaxis.set_major_formatter(myFmt)

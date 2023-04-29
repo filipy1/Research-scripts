@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y \
     git \
     && rm -rf /var/lib/apt/lists/*
 
-RUN git clone https://github.com/filipy1/Research-scripts.git .
+RUN git clone https://github.com/filipy1/Research-scripts .
 
 RUN pip3 install -r requirements.txt
 

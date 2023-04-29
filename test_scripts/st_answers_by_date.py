@@ -8,7 +8,10 @@ import matplotlib.dates as mdates
 ### A script to check the amount of answers given by each participant for a certain amount of time.
 ### The aim of this application is to help track compliance.
 
-uploaded_file = st.file_uploader("Choose a Solio DB CSV file")
+
+
+
+uploaded_file = st.file_uploader("Choose a Solio DB CSV/XLSX file")
 
 if '.xlsx' in uploaded_file.name:
     df = pd.read_excel(

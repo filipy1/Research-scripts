@@ -7,7 +7,7 @@ import plotly.express as px
 ### A script to compare between participant's answers with an interactive graph.
 col1, col2 = st.columns(2)
 uploaded_file = col1.file_uploader(
-    "Choose a DB file"
+    "Choose a DB CSV/XLSX file"
 )  # Uploading a CSV file as a data-base
 
 if 'xlsx' in uploaded_file.name:
@@ -27,14 +27,14 @@ if 'csv' in uploaded_file.name:
 ### Optional to add another CSV file representing the different groups in the information
 try:
     group_upload = col2.file_uploader(
-        'Upload a CSV built from with 2 columns: "User ID" and "Group type" (e.g. sham/real)',
+        'Upload a CSV/XLSX built from with 2 columns: "User ID" and "Group type" (e.g. sham/real)',
     )
     if 'csv' in group_upload.name:
         group_df = pd.read_csv(group_upload)
     elif 'xlsx' in group_upload.name:
         group_df = pd.read_excel(group_upload)
 except:
-    col2.write("No User group CSV was provided")
+    col2.write("No User group CSV/XLSX was provided")
     group_df = None
 
 

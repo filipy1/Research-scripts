@@ -14,9 +14,8 @@ CSV/XLSX template for the uploaded file:
 
 
 ## Explanation of Streamlit multipage app usage
-For this project I utilized the power of the multipage streamlit feature.
-The project is built such that there are 2 copies of each "streamlit app", one is for testing and building new features and the other is inside the "pages" under a different name which is the side bar title to be shown in the app.
-
+For this project I utilized the power of the multi-page streamlit feature.
+The project is built such that there are 2 copies of each "streamlit app". One set of copies is in the "test_script" folder so you are able to run each app individually and change it as you see fit, the second set of copies is under the "pages" folder and is meant to be the final product to be used in the multi-page app.
 Another thing to note is the "Welcome.py" file which is the landing page of the app.
 
 ### Also added dockerfile support

@@ -115,7 +115,7 @@ def plot_questions_answered(df):
     for key, df in ts_dfs.items():
         if end != df.index[-1]:
             df.loc[end] = 0  # Plotting the graph.
-        ax = sns.lineplot(data=df.loc[start:end], legend="brief", label=key)
+        ax = sns.lineplot(data=df.loc[start:end], label=key, legend=False) #legend="brief"
         ax.set(xlabel="Date", ylabel="Number of answers")
         ax.set_xticklabels(df.loc[start:end].index, rotation=45)
         plt.xticks(df.loc[start:end].index)
